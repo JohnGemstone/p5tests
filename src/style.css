@@ -1,0 +1,9 @@
+body {
+    margin: 0;
+    background-color: bisque;
+    overflow: hidden;
+}
+
+#p5 {
+    overflow: hidden;
+}
