@@ -5,10 +5,10 @@ const containerElement = document.getElementById('p5');
 
 const sketch = (p) => {
   let counter = 0;
-  let res, curpos, plotpos, plotrad, minrad, dist;
+  let res, moupos, plotpos, plotrad, minrad, dist;
 
   res = p.createVector(window.innerWidth,window.innerHeight)
-  curpos = p.createVector(0,0)
+  moupos = p.createVector(0,0)
   plotpos = p.createVector(0,0)
   plotrad = 40
   minrad = 40
@@ -21,21 +21,22 @@ const sketch = (p) => {
 
   p.draw = function() {
 
-   curpos.set(p.mouseX, p.mouseY)
+   moupos.set(p.mouseX, p.mouseY)
    
-   dist = curpos.dist(plotpos)
+   dist = moupos.dist(plotpos)
 
    if (dist > plotrad/2+minrad) {
 
-    let dia = 40
+    let dia = minrad + dist-(plotrad/2)
+    //let dia = p.random(10,300)
 
     //cal angle
     p.angleMode("DEGREES")
-    let angle = p.atan2(plotpos.x-curpos.x,plotpos.y-curpos.y)*-1-(p.PI*0.5)
+    let angle = p.atan2(plotpos.x-moupos.x,plotpos.y-moupos.y)*-1-(p.PI*0.5)
     console.log((angle))
 
     //draw circle
-    let newpos = new p5.Vector.fromAngle(angle,dia)
+    let newpos = new p5.Vector.fromAngle(angle,(dia/2)+(plotrad/2))
     newpos.add(plotpos)
     p.ellipse(newpos.x, newpos.y, dia)
     p.ellipse(newpos.x, newpos.y, 1)
