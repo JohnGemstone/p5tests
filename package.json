@@ -6,7 +6,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server"
-
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +19,7 @@
     "webpack-dev-server": "^3.1.9"
   },
   "dependencies": {
+    "dat.gui": "^0.7.7",
     "p5": "^0.7.2"
   }
 }
