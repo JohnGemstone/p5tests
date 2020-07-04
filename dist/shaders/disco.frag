@@ -15,7 +15,7 @@ void main() {
   // the texture is loaded upside down and backwards by default so lets flip it
   uv.y = 1.0 - uv.y;
   uv.x = 1.0 - uv.x;
- 
+
   vec4 tex = texture2D(tex0, uv);
 
   float gray = (tex.r + tex.g + tex.b) / 3.0;
@@ -28,7 +28,7 @@ void main() {
 //   float threshB = (fract(floor(tex.b*res)/scl)*scl) * gray ;
   float threshR = tex.r;
   float threshG = tex.g;
-  float threshB = tex.b;
+  float threshB = tex.b; 
   vec3 thresh = vec3(threshR, threshG, threshB);
 
   // render the output
