@@ -6,3 +6,10 @@ import * as dat from 'dat.gui';
 import sketch from './03_camcapture';
 
 sketch();
+
+// if (document.location.protocol === 'https:') {
+//     // page is secure
+//     console.log("secure")
+// } else {
+//     console.log("not secure");
+// }
