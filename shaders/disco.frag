@@ -28,7 +28,7 @@ void main() {
 //   float threshB = (fract(floor(tex.b*res)/scl)*scl) * gray ;
   float threshR = tex.r;
   float threshG = tex.g;
-  float threshB = tex.b;
+  float threshB = tex.b; 
   vec3 thresh = vec3(threshR, threshG, threshB);
 
   // render the output
