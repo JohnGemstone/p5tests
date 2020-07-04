@@ -1,0 +1,11 @@
+html, body  {
+    margin: 0;
+    background-color: bisque;
+    overflow: auto;
+    overscroll-behavior-y: none;
+}
+
+#p5 {
+    overflow: hidden;
+    overscroll-behavior-y: none;
+}
