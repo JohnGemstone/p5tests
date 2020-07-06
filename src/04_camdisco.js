@@ -7,27 +7,38 @@ export default function() {
 
     const containerElement = document.getElementById('p5');
 
-        //Controls
-        let controls = {
-            divs: [5,5],
-            offset: 0,
-            range: 0,
-          };
-          
-        window.onload = function() {
-            var gui = new dat.GUI();
-            //gui.add(controls, "divs", 0, 30)
-            gui.add(controls, "offset", 0, 1)
-            gui.add(controls, "range", -2, 2)
-          };
+    //Controls
+    let controls = {
+        divs: [5,5],
+        offset: 0,
+        range: 0,
+        switch: false,
+        };
         
-        let mouseIsPressedDOM = false;
+    window.onload = function() {
+        var gui = new dat.GUI();
+        
+        //gui.add(controls, "divs", 0, 30)
+        gui.add(controls, "offset", 0, 1)
+        gui.add(controls, "range", -2, 2)
+        gui.add(controls, "switch")
+        };
+    
+    let mouseIsPressedDOM = false;
 
 
     const sketch = (p) => {
 
-        let res, cam, theShader, webgl, u_mouse;
+        let res, cam, theShader, webgl, u_mouse, c_switch, c_options;
         res = p.createVector(window.innerWidth,window.innerHeight)
+        c_switch = false
+        c_options = {
+            video: {
+                facingMode: {
+                 exact: "user"
+               }
+            }
+          }
         
         p.preload = function(){
             theShader = p.loadShader('./shaders/disco.vert', './shaders/disco.frag');
@@ -40,11 +51,7 @@ export default function() {
             p.background(0)
             p.noStroke()
 
-            cam = p.createCapture({
-                    video: {
-                        facingMode: "user"
-                    }
-                })
+            cam = p.createCapture(c_options)
             cam.size(res.x,res.y)
             cam.hide()
 
@@ -84,8 +91,50 @@ export default function() {
                 controls.divs[1] = Math.floor((p.mouseY / res.y) * 40);
             }
 
+            if (controls.switch != c_switch) {
+                switchCamera();
+            }
+
 
         }
+
+        function switchCamera() {
+            c_switch = controls.switch
+            stopCam()
+            if (c_switch = true) {
+                cam.remove()
+                c_options =  {
+                    video: {
+                        facingMode: {
+                         exact: "environment"
+                       }
+                    }
+                  };
+            } else {
+                cam.remove()
+                c_options =  {
+                    video: {
+                        facingMode: {
+                         exact: "user"
+                       }
+                    }
+                  };
+            }
+            cam = p.createCapture(c_options)
+            cam.size(res.x,res.y)
+            cam.hide()
+
+        }
+        function stopCam() {
+            let stream = cam.elt.srcObject;
+            let tracks = stream.getTracks();
+          
+            tracks.forEach(function(track) {
+              track.stop();
+            });
+          
+            cam.elt.srcObject = null;
+          }
 
         p.windowResized = function() {
 
