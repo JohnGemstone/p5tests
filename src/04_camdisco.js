@@ -7,9 +7,26 @@ export default function() {
 
     const containerElement = document.getElementById('p5');
 
+        //Controls
+        let controls = {
+            divs: [5,5],
+            offset: 0,
+            range: 0,
+          };
+          
+        window.onload = function() {
+            var gui = new dat.GUI();
+            //gui.add(controls, "divs", 0, 30)
+            gui.add(controls, "offset", 0, 1)
+            gui.add(controls, "range", -2, 2)
+          };
+        
+        let mouseIsPressedDOM = false;
+
+
     const sketch = (p) => {
 
-        let res, cam, theShader, webgl, count;
+        let res, cam, theShader, webgl, u_mouse;
         res = p.createVector(window.innerWidth,window.innerHeight)
         
         p.preload = function(){
@@ -23,33 +40,51 @@ export default function() {
             p.background(0)
             p.noStroke()
 
-            webgl = p.createGraphics(res.x, res.y, p.WEBGL)
-
-            cam = p.createCapture(p.VIDEO);
+            cam = p.createCapture({
+                    video: {
+                        facingMode: "user"
+                    }
+                })
             cam.size(res.x,res.y)
             cam.hide()
-            
-            count = 0
+
+            webgl = p.createGraphics(res.x, res.y, p.WEBGL)
+
+            // SWITCH BUTTONS
+            // switchBtn = p.createButton('Switch Camera');
+            // switchBtn.position(19, 19);
+            // switchBtn.mousePressed(switchCamera);
+
+
 
         }
     
         p.draw = function() {
+
+            u_mouse = [p.mouseX,p.mouseY]
+
             webgl.shader(theShader)
             theShader.setUniform('tex0',cam)
-            //console.log(p.scale);
-            //p.filter(p.INVERT);
-            let h = 19
-            let scan = p.mouseY
-            webgl.rect(0,0,res.x,res.y)
-            p.image(
-                webgl,
-                0,0,res.x,res.y,
-                0,0,res.x,res.y)
 
-            p.fill("white")
-            //p.rect(0,0,100,100)
-            count = count%res.y
-            count = count + 1
+            theShader.setUniform('u_res', [res.x, res.y]);
+            theShader.setUniform('u_time', p.frameCount * 0.01);
+            theShader.setUniform('u_mouse', u_mouse); 
+            theShader.setUniform('tex0',cam)
+
+            theShader.setUniform('u_divs',controls.divs)
+            theShader.setUniform('u_offset',controls.offset)
+            theShader.setUniform('u_range',controls.range)
+
+            webgl.rect(0,0,res.x,res.y)
+
+            p.image(webgl,0,0,res.x,res.y)
+
+            if (mouseIsPressedDOM==true) {
+                controls.divs[0] = Math.floor((p.mouseX / res.x) * 30);
+                controls.divs[1] = Math.floor((p.mouseY / res.y) * 40);
+            }
+
+
         }
 
         p.windowResized = function() {
@@ -59,6 +94,13 @@ export default function() {
         };
     };
     
+        
+    containerElement.addEventListener("mousedown",function(event) {  mouseIsPressedDOM = true })
+    containerElement.addEventListener("mouseup",function(event) {  mouseIsPressedDOM = false })
+
+    containerElement.addEventListener("touchstart",function(event) {  mouseIsPressedDOM = true })
+    containerElement.addEventListener("touchend",function(event) {  mouseIsPressedDOM = false })
+
     new p5(sketch, containerElement);
     
 }
